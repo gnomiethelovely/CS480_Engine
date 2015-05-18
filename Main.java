@@ -5,9 +5,11 @@ import java.sql.*;
 import com.google.gson.Gson; // maye use to convert from JSON to java
 
 public class Main {
-
+    public static String timeStamp = "";
+    
     // run till terminated every 30 seconds
     public static void main(String[] args) {
+        
         ScheduledExecutorService executorService = 
                 Executors.newSingleThreadScheduledExecutor(); 
         
@@ -20,7 +22,9 @@ public class Main {
                     Connection conn = DriverManager.getConnection(url,"","");
                     Statement stmt = conn.createStatement();
                     ResultSet rs;
-
+                    
+                    // TODO: timeStamp = getCurrentTimeStamp
+                    
                     // get JSON stuff or get directly from database
                     rs = stmt.executeQuery("SELECT something");
                     while ( rs.next() ) { // approval method
@@ -40,7 +44,7 @@ public class Main {
                 }
             }
         };
-        
+        Database a = new Database();
         executorService.scheduleWithFixedDelay(task, 0, 30, TimeUnit.SECONDS);
     }
 }
