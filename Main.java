@@ -5,7 +5,8 @@ import java.sql.*;
 import com.google.gson.Gson; // maye use to convert from JSON to java
 
 public class Main {
-    public static String timeStamp = "";
+    //store current timestamp to know when there are new entries in db
+    protected static String timeStamp = "";
     
     // run till terminated every 30 seconds
     public static void main(String[] args) {
@@ -44,7 +45,6 @@ public class Main {
                 }
             }
         };
-        Database a = new Database();
         executorService.scheduleWithFixedDelay(task, 0, 30, TimeUnit.SECONDS);
     }
 }
