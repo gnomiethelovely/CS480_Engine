@@ -1,50 +1,51 @@
-package cs480.engine;
 
-import java.util.concurrent.*;
-import java.sql.*;
-import com.google.gson.Gson; // maye use to convert from JSON to java
+
+import java.util.List;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.TimeUnit;
+import org.parse4j.*;
+import org.parse4j.callback.FindCallback;
 
 public class Main {
-    //store current timestamp to know when there are new entries in db
-    protected static String timeStamp = "";
     
     // run till terminated every 30 seconds
     public static void main(String[] args) {
-        
         ScheduledExecutorService executorService = 
                 Executors.newSingleThreadScheduledExecutor(); 
-        
-        System.out.println("About to start querying database.");
+
         Runnable task = new Runnable() {    
             public void run() {
                 try {
-                    // TODO: Add url for sql site in the form of x://host/database
-                    String url = "";
-                    Connection conn = DriverManager.getConnection(url,"","");
-                    Statement stmt = conn.createStatement();
-                    ResultSet rs;
+                    System.out.println("About to start querying database.");
+                    String APP_ID = "ej29LXB9zHARKwcF5gHhkQ4SnJS7mGwWZ01qrZAa";
+                    String API_ID = "qzclRmYPQZwd0guChjOdwFsSrIfvZXFCM42jXaIq";
                     
-                    // TODO: timeStamp = getCurrentTimeStamp
+                    // Connect to parse.com database
+                    Parse.initialize(APP_ID, API_ID);
                     
-                    // get JSON stuff or get directly from database
-                    rs = stmt.executeQuery("SELECT something");
-                    while ( rs.next() ) { // approval method
-                        // get data and parse into new, waiting for approval, approved
-                        // if data already parsed ignore
-                        // else if (new) {
-                            // go to approval step
-                        // }
-                        // else if (waiting for approval ignore)
-                        // else if (approved)
-                        // else (whatever else)
-                    }
-                    conn.close();
+                    // Connect to Object
+                    ParseQuery<ParseObject> query = ParseQuery.getQuery("WorkflowUser");
+                    
+                    // Condition to search for
+                    //TODO: hopefully a key for if something is approved or nto
+                    query.whereEqualTo("Name", "FirstName");
+                    query.findInBackground(new FindCallback<ParseObject>() {
+                        public void done(List<ParseObject> results, ParseException e) {
+                            for (ParseObject a : results) {
+                                // Test for printing a value
+                                System.out.println(a.getString("email"));
+                            }
+                        }
+                    });
+                    System.out.println("");
                 } catch (Exception e) {
                     System.err.println("Got an exception! ");
                     System.err.println(e.getMessage());
                 }
             }
         };
-        executorService.scheduleWithFixedDelay(task, 0, 30, TimeUnit.SECONDS);
+        executorService.scheduleAtFixedRate(task, 0, 30, TimeUnit.SECONDS);
     }
 }
+
