@@ -8,14 +8,12 @@ import org.parse4j.*;
 import org.parse4j.callback.FindCallback;
 
 public class Main {
-    static Date updatedAt = new Date(92, 1, 10);
+    private static Date updatedAt = new Date(92, 1, 10);
 
     // run till terminated every 30 seconds
     public static void main(String[] args) {
-        WebService_WFEngine webService = new WebService_WFEngine();
         Database database = new Database();
-        
-        
+        // Decision_WFEngine decision = new Decision_WFEngine();
         ScheduledExecutorService executorService = 
                 Executors.newSingleThreadScheduledExecutor(); 
 
@@ -43,14 +41,12 @@ public class Main {
                                    
                                    updatedAt = a.getUpdatedAt(); // keep track of time if no approval states
                                    
+                                   // check state (0 for new, 1 for needs approval?) 
+                                   // and if necessary calls webservice
+                                   database.checkState(a);
                                    
-                                   /* Send each object not approved/completed to webservice
-                                      for decision
-                                   */
-                                   webService.get_Value();
-                                   
-                                   // check state 
-                                   //database.checkState();
+                                   // TODO: make decision from here
+                                   // decision();
                                    
                                    // checking to see it calling from parse.com
                                    System.out.println(a.getUpdatedAt());
