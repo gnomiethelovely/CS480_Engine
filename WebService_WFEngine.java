@@ -1,3 +1,6 @@
+
+import org.parse4j.ParseObject;
+
 /*
     Webservice for the workflow engine.
     Calls webservice(to be defined later) and returns a value.
@@ -14,7 +17,7 @@ public class WebService_WFEngine {
         */
     }
     
-    public int get_Value() {
+    public int get_Value(ParseObject jsonObject) { // get a return from webserv
         return value;
     }
     

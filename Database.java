@@ -1,3 +1,6 @@
+
+import org.parse4j.ParseObject;
+
 /*
     Database for the workflow engine.
     Calls database and checks the state of the entry.
@@ -6,15 +9,20 @@
 
 
 public class Database {
+    WebService_WFEngine webService = new WebService_WFEngine();
+    protected int value;
     
-    public void checkState() {
-        //compare time from previous db list
+    public int checkState(ParseObject object) {
         
-        if (database:state==waiting for approval) {
-            die;
-        } else (database:state==approved) {
-            // pass to where needed/Service
-            Decision_WFEngine();
+        if (object.getString("State") == "1") { // needs approval
+            value = webService.get_Value(object);
+            
+        } else if (object.getString("State") == "0") { // new entry
+            value = webService.get_Value(object);
+        } else {
+            // form is completed
         }
+        
+        return value;
     }
 }
